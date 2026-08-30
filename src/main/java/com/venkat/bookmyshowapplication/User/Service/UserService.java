@@ -1,4 +1,8 @@
 package com.venkat.bookmyshowapplication.User.Service;
 
-public class UserService {
+import com.venkat.bookmyshowapplication.User.Model.User;
+
+public interface  UserService {
+
+    User RegisterUser(String name,String email,String Password);
 }
