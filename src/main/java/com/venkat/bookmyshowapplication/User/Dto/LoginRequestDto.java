@@ -1,10 +1,6 @@
-package com.venkat.bookmyshowapplication.User.Model;
+package com.venkat.bookmyshowapplication.User.Dto;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -12,10 +8,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name ="Users")
-public class User extends BaseModel {
-    private String name;
-    @Column(nullable = false,unique = true)
+
+public class LoginRequestDto {
+
+    @NotBlank(message = "Email cannot be empty")
     private String email;
     @NotBlank(message = "Password cannot be empty")
     @Pattern(
@@ -23,8 +19,4 @@ public class User extends BaseModel {
             message = "Password must contain at least one uppercase letter, one number, one special character, and minimum 8 characters"
     )
     private String password;
-    @Enumerated(EnumType.STRING)
-    private UserResponseStatus status;
-    private boolean verified;
-
 }
