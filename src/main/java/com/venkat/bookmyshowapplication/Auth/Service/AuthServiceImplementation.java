@@ -31,7 +31,7 @@ public class AuthServiceImplementation implements  AuthService {
         try {
             Optional<User> userCredientials=  findbyemail(email);
             PasswordValidation(Password,userCredientials.get().getPassword());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login Successful");
+            return ResponseEntity.status(HttpStatus.OK).body("Login Successful");
         }
         catch (LoginCredientialsmismatchException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -43,7 +43,7 @@ public class AuthServiceImplementation implements  AuthService {
         Optional<User> Existinguser = userRepository.findByEmail(Email);
 
         if (Existinguser.isEmpty()){
-            throw new LoginCredientialsmismatchException("Invalid Credientials");
+            throw new LoginCredientialsmismatchException("Invalid Email or Password");
         }
 
         return  Existinguser;
@@ -53,7 +53,7 @@ public class AuthServiceImplementation implements  AuthService {
     public  void PasswordValidation(String Rawpassword,String encodedpassword ) throws LoginCredientialsmismatchException {
 
        if (! passwordEncoder.matches(Rawpassword,encodedpassword)){
-           throw new LoginCredientialsmismatchException("Invalid  Passowrd");
+           throw new LoginCredientialsmismatchException("Invalid Email or Password");
        }
 
     }

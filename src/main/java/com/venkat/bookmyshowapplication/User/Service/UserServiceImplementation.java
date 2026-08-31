@@ -3,7 +3,6 @@ package com.venkat.bookmyshowapplication.User.Service;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Model.UserResponseStatus;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
-import org.hibernate.grammars.hql.HqlParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,8 @@ public class UserServiceImplementation implements UserService {
         User newuser = new User();
 
         if (existinguser.isPresent()){
-            existinguser.get().setStatus(UserResponseStatus.ALREADY_CREATED);
+            existinguser.get().setVerified(true);
+            existinguser.get().setStatus(UserResponseStatus.PENDING_VERIFICATION);
 
             return  existinguser.get();
 

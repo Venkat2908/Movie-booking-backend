@@ -1,23 +1,30 @@
 package com.venkat.bookmyshowapplication.Auth.Controller;
 
+import com.venkat.bookmyshowapplication.Auth.Dto.LoginRequestDto;
 import com.venkat.bookmyshowapplication.Auth.Service.AuthService;
 import com.venkat.bookmyshowapplication.Common.Exceptions.LoginCredientialsmismatchException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private AuthService authService;
 
-    public AuthController(){
-
-    }
-
     public AuthController(AuthService authService){
         this.authService = authService;
+
     }
 
-    public ResponseEntity<String> loginrequest(String email,String password) throws LoginCredientialsmismatchException {
+    @PostMapping("/login")
+    public ResponseEntity<String> loginrequest(@Valid @RequestBody LoginRequestDto requestdto) throws LoginCredientialsmismatchException {
 
-        return authService.LoginValidation(email,password);
+        return authService.LoginValidation(requestdto.getEmail(), requestdto.getPassword());
     }
 }
