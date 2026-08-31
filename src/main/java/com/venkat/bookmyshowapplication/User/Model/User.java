@@ -23,6 +23,7 @@ public class User extends BaseModel {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserResponseStatus status;
+
     private boolean verified;
 
 }

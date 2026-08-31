@@ -1,9 +1,9 @@
 package com.venkat.bookmyshowapplication.User.Controller;
 
 
-import com.venkat.bookmyshowapplication.Auth.Service.AuthService;
 import com.venkat.bookmyshowapplication.User.Dto.RegisterUserRequestDTO;
 import com.venkat.bookmyshowapplication.User.Dto.UserResponseDTO;
+import com.venkat.bookmyshowapplication.User.Model.RegisterationResult;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Service.UserService;
 import jakarta.validation.Valid;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private UserService  userService;
-    private AuthService authService;
 
 
-    public UserController(UserService userService,AuthService authService){
+
+    public UserController(UserService userService){
         this.userService = userService;
-        this.authService =  authService;
+
     }
 
     @PostMapping("/Register")
@@ -40,11 +40,18 @@ public class UserController {
         response.setName(user.getName());
         response.setStatus(user.getStatus());
 
-      return   switch (response.getStatus()){
-          case ACTIVE -> ResponseEntity.status(HttpStatus.CREATED).body(response);
-          case PENDING_VERIFICATION -> ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(response);
-             default -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        };
+
+
+     if (user.isVerified()) {
+         response.setRegisterationResult(RegisterationResult.ALREADY_EXISTS);
+         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(response);
+     }else {
+
+         response.setRegisterationResult(RegisterationResult.CREATED);
+            return    ResponseEntity.status(HttpStatus.CREATED).body(response);
+          }
+
+
 
     }
 

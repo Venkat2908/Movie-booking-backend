@@ -27,7 +27,6 @@ public class UserServiceImplementation implements UserService {
 
         if (existinguser.isPresent()){
             existinguser.get().setVerified(true);
-            existinguser.get().setStatus(UserResponseStatus.PENDING_VERIFICATION);
 
             return  existinguser.get();
 

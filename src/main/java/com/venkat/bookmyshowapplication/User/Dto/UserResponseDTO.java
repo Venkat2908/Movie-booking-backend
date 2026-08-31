@@ -1,6 +1,7 @@
 package com.venkat.bookmyshowapplication.User.Dto;
 
 
+import com.venkat.bookmyshowapplication.User.Model.RegisterationResult;
 import com.venkat.bookmyshowapplication.User.Model.UserResponseStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,4 +13,5 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private UserResponseStatus status;
+    private RegisterationResult registerationResult;
 }
