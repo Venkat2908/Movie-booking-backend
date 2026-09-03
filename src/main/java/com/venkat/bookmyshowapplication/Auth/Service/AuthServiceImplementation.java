@@ -1,14 +1,14 @@
 package com.venkat.bookmyshowapplication.Auth.Service;
 
 
-import com.venkat.bookmyshowapplication.Auth.Repository.AuthRepository;
+import com.venkat.bookmyshowapplication.Auth.Model.Token;
+import com.venkat.bookmyshowapplication.Auth.Security.TokenService;
 import com.venkat.bookmyshowapplication.Common.Exceptions.LoginCredientialsmismatchException;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.venkat.bookmyshowapplication.Auth.Model.TokenResponse;
 
 import java.util.Optional;
 
@@ -17,25 +17,36 @@ public class AuthServiceImplementation implements  AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private AuthRepository authRepository;
+    private TokenService tokenService;
+
     private UserRepository userRepository;
 
-    public AuthServiceImplementation(AuthRepository authRepository,PasswordEncoder passwordEncoder,UserRepository userRepository){
-        this.authRepository = authRepository;
+    public AuthServiceImplementation(PasswordEncoder passwordEncoder, TokenService tokenService, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
         this.userRepository = userRepository;
     }
-    @Override
-    public ResponseEntity<String> LoginValidation(String email, String Password) throws LoginCredientialsmismatchException {
 
-        try {
-            Optional<User> userCredientials=  findbyemail(email);
-            PasswordValidation(Password,userCredientials.get().getPassword());
-            return ResponseEntity.status(HttpStatus.OK).body("Login Successful");
-        }
-        catch (LoginCredientialsmismatchException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+    @Override
+    public Token LoginValidation(String email, String Password) throws LoginCredientialsmismatchException {
+
+        Optional<User> userCredientials=  findbyemail(email);
+         PasswordValidation(Password,userCredientials.get().getPassword());
+
+
+      TokenResponse tokenResponse = tokenService.issueTokens(userCredientials.get());
+
+      Token newtoken = new Token();
+      newtoken.setAccesstoken(tokenResponse.getAccesstoken());
+      newtoken.setUser_details(userCredientials.get());
+      newtoken.setExpriy_time(tokenResponse.getExpirydate());
+      newtoken.setRefreshtoken(tokenResponse.getRefreshToken());
+      newtoken.setAccessType(tokenResponse.getAccessType());
+
+      return  newtoken;
+
+
+
 
     }
 

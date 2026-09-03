@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 
 public class LoginRequestDto {
-
     @Email
     @NotBlank(message = "Email cannot be empty")
     private String email;
