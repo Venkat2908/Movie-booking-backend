@@ -5,6 +5,7 @@ public enum UserResponseStatus {
     ACTIVE,
     INACTIVE,
     BLOCKED,
+    VERIFIED,
     PENDING_VERIFICATION;
 
 }

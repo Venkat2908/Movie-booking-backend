@@ -1,10 +1,14 @@
-package com.venkat.bookmyshowapplication.Auth.Model;
+package com.venkat.bookmyshowapplication.auth.model;
 
 import com.venkat.bookmyshowapplication.User.Model.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
 @Table(
         name = "refresh_tokens",
@@ -42,7 +46,7 @@ public class RefreshToken {
     @Column(name = "revoked_at")
     private Instant revokedAt;
 
-    protected RefreshToken() {
+    public RefreshToken() {
     }
 
     public RefreshToken(

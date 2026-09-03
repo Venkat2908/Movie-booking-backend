@@ -1,6 +1,7 @@
 package com.venkat.bookmyshowapplication.User.Controller;
 
 
+import com.venkat.bookmyshowapplication.Common.Exceptions.UserNOtfound;
 import com.venkat.bookmyshowapplication.User.Dto.RegisterUserRequestDTO;
 import com.venkat.bookmyshowapplication.User.Dto.UserResponseDTO;
 import com.venkat.bookmyshowapplication.User.Model.RegisterationResult;
@@ -40,8 +41,6 @@ public class UserController {
         response.setName(user.getName());
         response.setStatus(user.getStatus());
 
-
-
      if (user.isVerified()) {
          response.setRegisterationResult(RegisterationResult.ALREADY_EXISTS);
          return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(response);
@@ -50,11 +49,22 @@ public class UserController {
          response.setRegisterationResult(RegisterationResult.CREATED);
             return    ResponseEntity.status(HttpStatus.CREATED).body(response);
           }
-
-
-
     }
 
+
+    public UserResponseDTO AccountVerificcation(@Valid @RequestBody RegisterUserRequestDTO AccverificationDto) throws UserNOtfound {
+        UserResponseDTO response = new UserResponseDTO();
+
+        User user = userService.AccountVerification(AccverificationDto.getEmail());
+
+        response.setEmail(user.getEmail());
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setStatus(user.getStatus());
+
+        return response;
+
+    }
 
 
 

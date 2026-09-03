@@ -1,4 +1,4 @@
-package com.venkat.bookmyshowapplication.Auth.Security;
+package com.venkat.bookmyshowapplication.auth.Security;
 
 import com.venkat.bookmyshowapplication.User.Model.User;
 import io.jsonwebtoken.Claims;

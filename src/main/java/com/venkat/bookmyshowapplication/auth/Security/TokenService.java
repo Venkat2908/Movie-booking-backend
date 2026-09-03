@@ -1,7 +1,7 @@
-package com.venkat.bookmyshowapplication.Auth.Security;
+package com.venkat.bookmyshowapplication.auth.Security;
 
 
-import com.venkat.bookmyshowapplication.Auth.Model.TokenResponse;
+import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

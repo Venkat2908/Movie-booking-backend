@@ -1,5 +1,6 @@
 package com.venkat.bookmyshowapplication.User.Service;
 
+import com.venkat.bookmyshowapplication.Common.Exceptions.UserNOtfound;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Model.UserResponseStatus;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
@@ -43,5 +44,33 @@ public class UserServiceImplementation implements UserService {
           userRepository.save(newuser);
       }
       return newuser;
+    }
+
+
+
+    @Override
+    public User AccountVerification(String email) throws UserNOtfound {
+
+
+        Optional<User> existinguser = userRepository.findByEmail(email);
+
+        if (existinguser.isEmpty()){
+            throw new UserNOtfound("User Not found");
+        }
+
+        User    user = new User();
+        user.setVerified(true);
+        user.setEmail(existinguser.get().getEmail());
+        user.setName(existinguser.get().getName());
+        user.setId(existinguser.get().getId());
+
+        if (existinguser.get().getStatus().equals(UserResponseStatus.ACTIVE)){
+            user.setStatus(UserResponseStatus.VERIFIED);
+        }
+        else{
+            user.setStatus(UserResponseStatus.PENDING_VERIFICATION);
+        }
+
+        return  user;
     }
 }

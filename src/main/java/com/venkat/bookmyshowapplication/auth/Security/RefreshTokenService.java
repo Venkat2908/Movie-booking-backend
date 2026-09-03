@@ -1,8 +1,8 @@
-package com.venkat.bookmyshowapplication.Auth.Security;
+package com.venkat.bookmyshowapplication.auth.Security;
 
 
-import com.venkat.bookmyshowapplication.Auth.Model.RefreshToken;
-import com.venkat.bookmyshowapplication.Auth.Repository.RefreshTokenRepositary;
+import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
+import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepositary;
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidRefreshTokenException;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import org.springframework.beans.factory.annotation.Value;

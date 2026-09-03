@@ -1,8 +1,6 @@
-package com.venkat.bookmyshowapplication.Auth.Dto;
+package com.venkat.bookmyshowapplication.auth.dto;
 
-import com.venkat.bookmyshowapplication.Auth.Model.ResponseStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.venkat.bookmyshowapplication.auth.model.ResponseStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,12 +9,10 @@ import lombok.Setter;
 public class LoginResponseDto {
 
 
-    private  long id;
     private String email;
     private String accessToken;
     private String refreshtoken;
     private String accessType;
     private long expiry_time_in_Seconds;
-    @Enumerated(EnumType.STRING)
   private ResponseStatus responseStatus;
 }

@@ -1,6 +1,6 @@
-package com.venkat.bookmyshowapplication.Auth.Repository;
+package com.venkat.bookmyshowapplication.auth.repository;
 
-import com.venkat.bookmyshowapplication.Auth.Model.RefreshToken;
+import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

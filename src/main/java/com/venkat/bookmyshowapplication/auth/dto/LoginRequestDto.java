@@ -1,4 +1,4 @@
-package com.venkat.bookmyshowapplication.Auth.Dto;
+package com.venkat.bookmyshowapplication.auth.dto;
 
 
 import jakarta.validation.constraints.Email;
