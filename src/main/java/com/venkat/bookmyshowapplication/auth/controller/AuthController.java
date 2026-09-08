@@ -9,10 +9,8 @@ import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -35,6 +33,12 @@ public class AuthController {
         dto.setExpiry_time_in_Seconds(token.getExpirydate());
         dto.setRefreshToken (token.getRefreshToken());
         dto.setResponseStatus(ResponseStatus.LOGIN_SUCCESSFUL);
+        dto.setEmail(token.getEmail());
          return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> getProfile(Authentication authentication) {
+        return ResponseEntity.ok(authentication.getName());
     }
 }
