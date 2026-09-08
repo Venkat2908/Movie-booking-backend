@@ -6,4 +6,6 @@ import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 public interface AuthService {
 
    TokenResponse authenticate(String email, String Password) throws InvalidCredentialsException;
+
+   TokenResponse Refreshtokengenerator(String refreshtoken);
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static String Prefix_value ="Bearer ";
+    private static String BEARER_PREFIX ="Bearer ";
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 
-        if (header==null || !header.startsWith(Prefix_value)){
+        if (header==null || !header.startsWith(BEARER_PREFIX)){
             filterChain.doFilter(request,response);
             return;
         }
@@ -69,7 +69,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
       }
 
-       catch (JwtException | IllegalArgumentException exception){
+       catch ( JwtException
+               | IllegalArgumentException
+               | InvalidCredentialsException exception){
+           SecurityContextHolder.clearContext();
            response.sendError(
                    HttpServletResponse.SC_UNAUTHORIZED,
                    "Invalid or expired access token"
@@ -81,8 +84,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    private String getAccessToken(String Header){
+    private String getAccessToken(String header){
 
-        return  Header.substring(Prefix_value.length()).trim();
+        return  header.substring(BEARER_PREFIX.length()).trim();
     }
 }

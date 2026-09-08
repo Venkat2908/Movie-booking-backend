@@ -1,6 +1,7 @@
 package com.venkat.bookmyshowapplication.auth.Security;
 
 
+import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
 import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,9 @@ public class TokenService {
                 "Bearer",
                 jwtService.getAccessTokenExpiration().toSeconds()
         );
+    }
+
+    public void revoketoken(RefreshToken refreshToken){
+          refreshTokenService.revoke(refreshToken);
     }
 }
