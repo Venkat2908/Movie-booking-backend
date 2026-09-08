@@ -1,67 +1,65 @@
 package com.venkat.bookmyshowapplication.auth.Security;
 
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
-import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidRefreshTokenException;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
-import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
-import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static String Prefix_value ="Bearer ";
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtAuthenticationFilter(UserRepository userRepository, JwtService jwtService, RefreshTokenRepository refreshTokenRepository) {
+
+    public JwtAuthenticationFilter(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String header = request.getHeader("Authorisation");
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
 
         if (header==null || !header.startsWith(Prefix_value)){
             filterChain.doFilter(request,response);
             return;
         }
 
-        String accessToken = getaccessToken(header);
+        String accessToken = getAccessToken(header);
 
-      try{
+      try {
 
           long userid = jwtService.extractUserId(accessToken);
 
           Optional<User> user = userRepository.findById(userid);
 
-          if (user.isEmpty()){
+          if (user.isEmpty()) {
               throw new InvalidCredentialsException("No user id found");
           }
 
-          Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(userid);
-          if (!refreshToken.get().getExpiresAt().isBefore(Instant.now())){
-              throw  new InvalidRefreshTokenException("Invalid Token");
-          }
+          if (SecurityContextHolder.getContext().getAuthentication() == null) {
+
+
           UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                   user.get().getEmail(),
                   null,
@@ -70,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           );
           authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+      }
           filterChain.doFilter(request,response);
 
       }
@@ -87,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    private String getaccessToken(String Header){
+    private String getAccessToken(String Header){
 
         return  Header.substring(Prefix_value.length()).trim();
     }
