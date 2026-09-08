@@ -5,6 +5,7 @@ import com.venkat.bookmyshowapplication.Common.Utils.TokenResponseMapper;
 import com.venkat.bookmyshowapplication.auth.Service.AuthService;
 import com.venkat.bookmyshowapplication.auth.dto.LoginRequestDto;
 import com.venkat.bookmyshowapplication.auth.dto.LoginResponseDto;
+import com.venkat.bookmyshowapplication.auth.dto.LogoutRequestDto;
 import com.venkat.bookmyshowapplication.auth.dto.RefreshTokenRequestDto;
 import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import jakarta.validation.Valid;
@@ -42,12 +43,16 @@ public class AuthController {
 
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDto> refreshToken(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto){
-
-        System.out.println(refreshTokenRequestDto.getRefreshToken());
-        TokenResponse tokenResponse = authService.Refreshtokengenerator(refreshTokenRequestDto.getRefreshToken());
+    public ResponseEntity<LoginResponseDto> refreshToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequestDto){
+        TokenResponse tokenResponse = authService.refreshTokens(refreshTokenRequestDto.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK).body(tokenresponsetoLoginresponseDto.convert(tokenResponse));
 
 
+    }
+
+    @PostMapping("/logout")
+    public HttpStatus logoutsession(@Valid @RequestBody LogoutRequestDto logoutRequestDto){
+
+        return authService.logout(logoutRequestDto.getRefreshToken());
     }
 }
