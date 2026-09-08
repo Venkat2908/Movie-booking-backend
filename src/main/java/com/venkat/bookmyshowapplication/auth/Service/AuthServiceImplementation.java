@@ -9,13 +9,14 @@ import com.venkat.bookmyshowapplication.auth.Security.TokenService;
 import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
 import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.HexFormat;
 import java.util.Optional;
 
@@ -50,11 +51,12 @@ public class AuthServiceImplementation implements  AuthService {
       return  tokenResponse;
 
 
-
-
     }
 
+
+
     @Override
+    @Transactional
     public TokenResponse refreshTokens(String refreshtokenvalue) throws InvalidRefreshTokenException {
 
 
@@ -64,7 +66,12 @@ public class AuthServiceImplementation implements  AuthService {
             throw new InvalidRefreshTokenException("Invalid Refresh Token");
         }
 
+        if (refreshToken.get().getExpiresAt().isBefore(Instant.now()) ||
+                refreshToken.get().getExpiresAt().equals(Instant.now() ))
+        {
+            throw  new InvalidRefreshTokenException("Refresh Token is Expired");
 
+        }
         if (refreshToken.get().isRevoked()){
             throw new InvalidRefreshTokenException("Refresh Token is already revoked");
         }
@@ -76,24 +83,17 @@ public class AuthServiceImplementation implements  AuthService {
         return  tokenResponse;
 
 
-
-
-
-
     }
 
+    @Transactional
     @Override
-    public HttpStatus logout(String refreshToken) {
+    public void logout(String refreshToken) {
         Optional <RefreshToken> logout_token = refreshTokenRepository.findByTokenHash(hash(refreshToken));
-        if (logout_token.isEmpty()){
-            throw new InvalidRefreshTokenException("Invalid Refresh Token");
-        }
+//        if (logout_token.isEmpty()){
+//            throw new InvalidRefreshTokenException("Invalid Refresh Token");
+//        }
 
         tokenService.revoketoken(logout_token.get());
-
-        return HttpStatus.NO_CONTENT;
-
-
 
     }
 

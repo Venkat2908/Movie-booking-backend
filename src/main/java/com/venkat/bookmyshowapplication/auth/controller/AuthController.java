@@ -51,8 +51,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public HttpStatus logoutsession(@Valid @RequestBody LogoutRequestDto logoutRequestDto){
+    public ResponseEntity<Void> logoutsession(@Valid @RequestBody LogoutRequestDto logoutRequestDto){
 
-        return authService.logout(logoutRequestDto.getRefreshToken());
+         authService.logout(logoutRequestDto.getRefreshToken());
+
+
+        return ResponseEntity.noContent().build();
     }
 }
