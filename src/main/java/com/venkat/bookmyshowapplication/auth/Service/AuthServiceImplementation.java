@@ -60,6 +60,7 @@ public class AuthServiceImplementation implements  AuthService {
     public TokenResponse refreshTokens(String refreshtokenvalue) throws InvalidRefreshTokenException {
 
 
+
         Optional <RefreshToken> refreshToken = refreshTokenRepository.findByTokenHash(hash(refreshtokenvalue));
 
         if (refreshToken.isEmpty()){
@@ -89,9 +90,9 @@ public class AuthServiceImplementation implements  AuthService {
     @Override
     public void logout(String refreshToken) {
         Optional <RefreshToken> logout_token = refreshTokenRepository.findByTokenHash(hash(refreshToken));
-//        if (logout_token.isEmpty()){
-//            throw new InvalidRefreshTokenException("Invalid Refresh Token");
-//        }
+        if (logout_token.isEmpty()){
+            throw new InvalidRefreshTokenException("Invalid Refresh Token");
+        }
 
         tokenService.revoketoken(logout_token.get());
 
