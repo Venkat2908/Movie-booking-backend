@@ -1,6 +1,6 @@
 package com.venkat.bookmyshowapplication.User.Service;
 
-import com.venkat.bookmyshowapplication.Common.Exceptions.UserNOtfound;
+import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Model.UserResponseStatus;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
@@ -27,7 +27,6 @@ public class UserServiceImplementation implements UserService {
         User newuser = new User();
 
         if (existinguser.isPresent()){
-            existinguser.get().setVerified(true);
 
             return  existinguser.get();
 
@@ -49,13 +48,13 @@ public class UserServiceImplementation implements UserService {
 
 
     @Override
-    public User AccountVerification(String email) throws UserNOtfound {
+    public User AccountVerification(String email) throws InvalidCredentialsException {
 
 
         Optional<User> existinguser = userRepository.findByEmail(email);
 
         if (existinguser.isEmpty()){
-            throw new UserNOtfound("User Not found");
+            throw new InvalidCredentialsException("User Not found");
         }
 
         User    user = new User();

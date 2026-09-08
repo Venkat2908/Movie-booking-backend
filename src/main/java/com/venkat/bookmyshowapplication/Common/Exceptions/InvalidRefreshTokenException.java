@@ -5,9 +5,4 @@ public class InvalidRefreshTokenException extends RuntimeException {
         super(message);
     }
 
-    public static class InvalidRefreshTokenException extends RuntimeException{
-        public LoginCredientialsmismatchException(String message) {
-            super(message);
-        }
-    }
 }

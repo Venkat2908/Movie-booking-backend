@@ -1,7 +1,7 @@
 package com.venkat.bookmyshowapplication.User.Controller;
 
 
-import com.venkat.bookmyshowapplication.Common.Exceptions.UserNOtfound;
+import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
 import com.venkat.bookmyshowapplication.User.Dto.RegisterUserRequestDTO;
 import com.venkat.bookmyshowapplication.User.Dto.UserResponseDTO;
 import com.venkat.bookmyshowapplication.User.Model.RegisterationResult;
@@ -52,7 +52,7 @@ public class UserController {
     }
 
 
-    public UserResponseDTO AccountVerificcation(@Valid @RequestBody RegisterUserRequestDTO AccverificationDto) throws UserNOtfound {
+    public UserResponseDTO AccountVerificcation(@Valid @RequestBody RegisterUserRequestDTO AccverificationDto) throws InvalidCredentialsException {
         UserResponseDTO response = new UserResponseDTO();
 
         User user = userService.AccountVerification(AccverificationDto.getEmail());
