@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 public class LoginResponseDto {
 
-
+private long id;
     private String email;
     private String accessToken;
-    private String refreshtoken;
+    private String refreshToken;
     private String accessType;
     private long expiry_time_in_Seconds;
   private ResponseStatus responseStatus;

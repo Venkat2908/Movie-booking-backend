@@ -26,6 +26,7 @@ public class TokenService {
         String refreshToken = refreshTokenService.generateAndStore(user);
 
         return new TokenResponse(
+                user.getEmail(),
                 accessToken,
                 refreshToken,
                 "Bearer",

@@ -2,8 +2,7 @@ package com.venkat.bookmyshowapplication.auth.Security;
 
 
 import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
-import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepositary;
-import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidRefreshTokenException;
+import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepository;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,13 +22,13 @@ public class RefreshTokenService {
 
     private static final int TOKEN_SIZE_BYTES = 32;
 
-    private final RefreshTokenRepositary refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final Duration refreshTokenExpiration;
     private final SecureRandom secureRandom;
     private final Clock clock;
 
     public RefreshTokenService(
-            RefreshTokenRepositary refreshTokenRepository,
+            RefreshTokenRepository refreshTokenRepository,
             @Value("${security.jwt.refresh-token-expiration}")
             Duration refreshTokenExpiration
     ) {
@@ -65,7 +64,7 @@ public class RefreshTokenService {
         RefreshToken storedToken = refreshTokenRepository
                 .findByTokenHash(tokenHash)
                 .orElseThrow(() ->
-                        new InvalidRefreshTokenException(
+                        new InvalidRefreshTokenException.InvalidRefreshTokenException(
                                 "Invalid refresh token"
                         )
                 );
@@ -73,7 +72,7 @@ public class RefreshTokenService {
         Instant currentTime = clock.instant();
 
         if (storedToken.isRevoked() || storedToken.isExpired(currentTime)) {
-            throw new InvalidRefreshTokenException(
+            throw new InvalidRefreshTokenException.InvalidRefreshTokenException(
                     "Invalid refresh token"
             );
         }

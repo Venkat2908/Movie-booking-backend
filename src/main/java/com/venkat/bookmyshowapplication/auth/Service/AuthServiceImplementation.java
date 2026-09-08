@@ -1,11 +1,11 @@
 package com.venkat.bookmyshowapplication.auth.Service;
 
 
-import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
-import com.venkat.bookmyshowapplication.auth.Security.TokenService;
-import com.venkat.bookmyshowapplication.Common.Exceptions.LoginCredientialsmismatchException;
+import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
+import com.venkat.bookmyshowapplication.auth.Security.TokenService;
+import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +27,12 @@ public class AuthServiceImplementation implements  AuthService {
     }
 
     @Override
-    public TokenResponse authenticate (String email, String rawPassword) throws LoginCredientialsmismatchException {
+    public TokenResponse authenticate (String email, String rawPassword) throws InvalidCredentialsException {
 
         Optional<User> userCredentials=  findByEmail(email);
         validatePassword(rawPassword,userCredentials.get().getPassword());
 
-
       TokenResponse tokenResponse = tokenService.issueTokens(userCredentials.get());
-      tokenResponse.setUser_details(userCredentials.get());
-
-
 
       return  tokenResponse;
 
@@ -45,21 +41,21 @@ public class AuthServiceImplementation implements  AuthService {
 
     }
 
-    public Optional<User> findByEmail(String Email) throws LoginCredientialsmismatchException {
+    public Optional<User> findByEmail(String Email) throws InvalidCredentialsException {
         Optional<User> Existinguser = userRepository.findByEmail(Email);
 
         if (Existinguser.isEmpty()){
-            throw new LoginCredientialsmismatchException("Invalid Email or Password");
+            throw new InvalidCredentialsException("Invalid Email or Password");
         }
 
         return  Existinguser;
 
     }
 
-    public  void validatePassword(String Rawpassword,String encodedpassword ) throws LoginCredientialsmismatchException {
+    public  void validatePassword(String Rawpassword,String encodedpassword ) throws InvalidCredentialsException {
 
        if (! passwordEncoder.matches(Rawpassword,encodedpassword)){
-           throw new LoginCredientialsmismatchException("Invalid Email or Password");
+           throw new InvalidCredentialsException("Invalid Email or Password");
        }
 
     }

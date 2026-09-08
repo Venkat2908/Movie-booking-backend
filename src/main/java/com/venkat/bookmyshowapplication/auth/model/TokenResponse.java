@@ -1,6 +1,5 @@
 package com.venkat.bookmyshowapplication.auth.model;
 
-import com.venkat.bookmyshowapplication.User.Model.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,15 +7,16 @@ import lombok.Setter;
 @Setter
 
 public class TokenResponse {
-    private User user_details;
-private String accesstoken;
-private String RefreshToken;
+    private String email;
+    private String accessToken;
+private String refreshToken;
 private String accessType;
 private long expirydate;
 
-    public TokenResponse(String accesstoken, String refreshToken, String accessType, long expirydate) {
-        this.accesstoken = accesstoken;
-        RefreshToken = refreshToken;
+    public TokenResponse( String email, String accessToken, String refreshToken, String accessType, long expirydate) {
+        this.email = email;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.accessType = accessType;
         this.expirydate = expirydate;
     }
