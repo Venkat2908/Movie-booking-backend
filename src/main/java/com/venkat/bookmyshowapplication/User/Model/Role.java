@@ -1,12 +1,11 @@
 package com.venkat.bookmyshowapplication.User.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -16,5 +15,12 @@ public class Role extends  BaseModel {
     @Enumerated(EnumType.STRING)
     private RoleName name;
     @ManyToMany
-    Set<Permission> permissions;
+            @JoinTable(
+                    name ="role_permissions",
+                    joinColumns = @JoinColumn(name ="role_id"),
+                    inverseJoinColumns = @JoinColumn(name = "permission_id")
+            )
+    @Column(unique = true)
+    @NotNull
+    Set<Permission> permissions = new HashSet<>();
 }
