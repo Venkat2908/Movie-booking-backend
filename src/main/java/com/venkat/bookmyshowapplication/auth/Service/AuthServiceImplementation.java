@@ -73,6 +73,7 @@ public class AuthServiceImplementation implements  AuthService {
             throw  new InvalidRefreshTokenException("Refresh Token is Expired");
 
         }
+
         if (refreshToken.get().isRevoked()){
             throw new InvalidRefreshTokenException("Refresh Token is already revoked");
         }
