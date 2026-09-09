@@ -4,7 +4,6 @@ package com.venkat.bookmyshowapplication.User.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,8 +31,6 @@ public class User extends BaseModel {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @Column(unique = true)
-    @NotNull
     private Set<Role> roles = new HashSet<>();
 
 }

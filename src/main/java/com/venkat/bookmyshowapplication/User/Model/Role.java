@@ -1,7 +1,6 @@
 package com.venkat.bookmyshowapplication.User.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +12,7 @@ import java.util.Set;
 @Entity
 public class Role extends  BaseModel {
     @Enumerated(EnumType.STRING)
+    @Column(unique = true,nullable = false)
     private RoleName name;
     @ManyToMany
             @JoinTable(
@@ -20,7 +20,5 @@ public class Role extends  BaseModel {
                     joinColumns = @JoinColumn(name ="role_id"),
                     inverseJoinColumns = @JoinColumn(name = "permission_id")
             )
-    @Column(unique = true)
-    @NotNull
     Set<Permission> permissions = new HashSet<>();
 }

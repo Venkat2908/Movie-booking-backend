@@ -1,8 +1,11 @@
 package com.venkat.bookmyshowapplication.User.Service;
 
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
+import com.venkat.bookmyshowapplication.User.Model.Role;
+import com.venkat.bookmyshowapplication.User.Model.RoleName;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Model.UserResponseStatus;
+import com.venkat.bookmyshowapplication.User.Repository.RoleRepository;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,12 @@ public class UserServiceImplementation implements UserService {
 
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
-    public UserServiceImplementation(UserRepository userRepository,PasswordEncoder passwordEncoder){
+    public UserServiceImplementation(UserRepository userRepository,PasswordEncoder passwordEncoder,RoleRepository roleRepository){
         this.userRepository= userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
     @Override
     public User RegisterUser(String name, String email, String Password) {
@@ -32,11 +37,14 @@ public class UserServiceImplementation implements UserService {
 
         }
 
+        Role userrole =  roleRepository.findByName(RoleName.USER).orElseThrow();
+
       if (existinguser.isEmpty()){
           newuser.setName(name);
           newuser.setPassword(passwordEncoder.encode(Password));
           newuser.setEmail(email);
           newuser.setStatus(UserResponseStatus.ACTIVE);
+          newuser.getRoles().add(userrole);
           newuser.setVerified(false);
           newuser.setCreatedAt(new Date());
           newuser.setUpdatedAt(new Date());
