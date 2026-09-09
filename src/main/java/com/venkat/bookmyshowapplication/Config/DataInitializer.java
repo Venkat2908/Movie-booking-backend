@@ -90,18 +90,19 @@ public class DataInitializer {
                         return roleRepository.save(role);
                     });
             roleRepository
-                    .findByName(RoleName.THEATRE_ADMIN)
+                    .findByName(RoleName.ADMIN)
                     .orElseGet(() -> {
                         Role role = new Role();
-                        role.setName(RoleName.THEATRE_ADMIN);
+                        role.setName(RoleName.ADMIN);
 
                         Set<Permission> permissions = new HashSet<>();
                         permissions.add(movieRead);
+                        permissions.add(bookingCreate);
                         permissions.add(showCreate);
                         permissions.add(showUpdate);
+                        permissions.add(userManage);
 
                         role.setPermissions(permissions);
-
                         return roleRepository.save(role);
                     });
 

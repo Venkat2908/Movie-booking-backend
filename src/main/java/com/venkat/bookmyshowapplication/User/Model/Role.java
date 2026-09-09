@@ -14,7 +14,7 @@ public class Role extends  BaseModel {
     @Enumerated(EnumType.STRING)
     @Column(unique = true,nullable = false)
     private RoleName name;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
             @JoinTable(
                     name ="role_permissions",
                     joinColumns = @JoinColumn(name ="role_id"),

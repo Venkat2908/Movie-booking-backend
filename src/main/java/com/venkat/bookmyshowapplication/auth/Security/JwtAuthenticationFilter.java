@@ -1,6 +1,8 @@
 package com.venkat.bookmyshowapplication.auth.Security;
 
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
+import com.venkat.bookmyshowapplication.User.Model.Permission;
+import com.venkat.bookmyshowapplication.User.Model.Role;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
 import io.jsonwebtoken.JwtException;
@@ -10,13 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -55,11 +60,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
           if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
+              Set<GrantedAuthority> authorities = buildauthoristies(user.get());
+
 
           UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                   user.get().getEmail(),
                   null,
-                  Collections.emptyList()
+                  authorities
 
           );
           authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -87,5 +94,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getAccessToken(String header){
 
         return  header.substring(BEARER_PREFIX.length()).trim();
+    }
+
+
+    private Set<GrantedAuthority> buildauthoristies(User user){
+
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        for (Role role : user.getRoles()){
+            authorities.add( new SimpleGrantedAuthority("ROLE_"+role.getName().name()));
+
+            for (Permission permission : role.getPermissions()){
+                authorities.add(new SimpleGrantedAuthority(permission.getName().name()));
+            }
+        }
+
+
+        return  authorities;
     }
 }

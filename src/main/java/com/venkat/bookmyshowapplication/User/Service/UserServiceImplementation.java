@@ -37,7 +37,8 @@ public class UserServiceImplementation implements UserService {
 
         }
 
-        Role userrole =  roleRepository.findByName(RoleName.USER).orElseThrow();
+        Role userrole =  roleRepository.findByName(RoleName.USER).orElseThrow(()->
+                new IllegalStateException("Default user role is not configured"));
 
       if (existinguser.isEmpty()){
           newuser.setName(name);
@@ -52,8 +53,6 @@ public class UserServiceImplementation implements UserService {
       }
       return newuser;
     }
-
-
 
     @Override
     public User AccountVerification(String email) throws InvalidCredentialsException {
