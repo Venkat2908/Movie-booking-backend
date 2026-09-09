@@ -28,9 +28,13 @@ public class SecurityConfig {
 
 
         http.csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/Register", "/auth/login","/auth/refresh","/auth/logout").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/shows/create").hasAuthority("SHOW_CREATE")
                         .anyRequest().authenticated()
+//                        .requestMatchers("/user/Register", "/auth/login","/auth/refresh","/auth/logout").permitAll()
+//                        .anyRequest().authenticated()
                 ).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ) .addFilterBefore(

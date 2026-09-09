@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -52,19 +51,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
           long userid = jwtService.extractUserId(accessToken);
 
-          Optional<User> user = userRepository.findById(userid);
+          User user = userRepository.findWithAuthoritiesById(userid).orElseThrow(
+                  () -> new InvalidCredentialsException("User not found")
+          );
 
-          if (user.isEmpty()) {
-              throw new InvalidCredentialsException("No user id found");
-          }
+
 
           if (SecurityContextHolder.getContext().getAuthentication() == null) {
-
-              Set<GrantedAuthority> authorities = buildauthoristies(user.get());
+              Set<GrantedAuthority> authorities = buildAuthorities(user);
 
 
           UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                  user.get().getEmail(),
+                  user.getEmail(),
                   null,
                   authorities
 
@@ -97,7 +95,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    private Set<GrantedAuthority> buildauthoristies(User user){
+    private Set<GrantedAuthority> buildAuthorities(User user){
 
 
         Set<GrantedAuthority> authorities = new HashSet<>();
