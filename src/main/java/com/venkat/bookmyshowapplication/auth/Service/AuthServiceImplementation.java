@@ -88,6 +88,7 @@ public class AuthServiceImplementation implements  AuthService {
        tokenGenerateDto.setUser(refreshToken.get().getUser());
        tokenGenerateDto.setSubsequent(true);
 
+       tokenGenerateDto.setExpiresAt(refreshToken.get().getExpiresAt());
         TokenResponse tokenResponse = tokenService.issueTokens(tokenGenerateDto);
 
         return  tokenResponse;

@@ -46,13 +46,10 @@ public class RefreshTokenService {
         Instant createdAt = clock.instant();
         Instant expiresAt;
 
-        if (tokenGenerateDto.getSubsequent().equals(Boolean.FALSE)){
+        if (!tokenGenerateDto.isSubsequent()){
              expiresAt = createdAt.plus(refreshTokenExpiration);
         }else {
-            RefreshToken refreshToken1 =  refreshTokenRepository.findById(tokenGenerateDto.getUser().getId()).
-                    orElseThrow(()-> new InvalidRefreshTokenException("User not found"));
-
-             expiresAt = refreshToken1.getExpiresAt();
+             expiresAt = tokenGenerateDto.getExpiresAt();
         }
 
 
