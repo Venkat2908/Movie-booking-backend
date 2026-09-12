@@ -1,9 +1,9 @@
 package com.venkat.bookmyshowapplication.auth.Security;
 
 
+import com.venkat.bookmyshowapplication.User.Dto.TokenGenerateDto;
 import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
 import com.venkat.bookmyshowapplication.auth.model.TokenResponse;
-import com.venkat.bookmyshowapplication.User.Model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +22,12 @@ public class TokenService {
     }
 
     @Transactional
-    public TokenResponse issueTokens(User user) {
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = refreshTokenService.generateAndStore(user);
+    public TokenResponse issueTokens(TokenGenerateDto tokenGenerateDto) {
+        String accessToken = jwtService.generateAccessToken(tokenGenerateDto.getUser());
+        String refreshToken = refreshTokenService.generateAndStore(tokenGenerateDto);
 
         return new TokenResponse(
-                user.getEmail(),
+                tokenGenerateDto.getUser().getEmail(),
                 accessToken,
                 refreshToken,
                 "Bearer",

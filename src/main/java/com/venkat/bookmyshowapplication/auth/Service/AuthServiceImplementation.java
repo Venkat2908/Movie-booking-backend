@@ -3,6 +3,7 @@ package com.venkat.bookmyshowapplication.auth.Service;
 
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidCredentialsException;
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidRefreshTokenException;
+import com.venkat.bookmyshowapplication.User.Dto.TokenGenerateDto;
 import com.venkat.bookmyshowapplication.User.Model.User;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
 import com.venkat.bookmyshowapplication.auth.Security.TokenService;
@@ -46,7 +47,10 @@ public class AuthServiceImplementation implements  AuthService {
         Optional<User> userCredentials=  findByEmail(email);
         validatePassword(rawPassword,userCredentials.get().getPassword());
 
-      TokenResponse tokenResponse = tokenService.issueTokens(userCredentials.get());
+        TokenGenerateDto tokenGenerateDto = new TokenGenerateDto();
+        tokenGenerateDto.setUser(userCredentials.get());
+
+      TokenResponse tokenResponse = tokenService.issueTokens(tokenGenerateDto);
 
       return  tokenResponse;
 
@@ -80,7 +84,11 @@ public class AuthServiceImplementation implements  AuthService {
 
         tokenService.revoketoken(refreshToken.get());
 
-        TokenResponse tokenResponse = tokenService.issueTokens(refreshToken.get().getUser());
+        TokenGenerateDto tokenGenerateDto = new TokenGenerateDto();
+       tokenGenerateDto.setUser(refreshToken.get().getUser());
+       tokenGenerateDto.setSubsequent(true);
+
+        TokenResponse tokenResponse = tokenService.issueTokens(tokenGenerateDto);
 
         return  tokenResponse;
 

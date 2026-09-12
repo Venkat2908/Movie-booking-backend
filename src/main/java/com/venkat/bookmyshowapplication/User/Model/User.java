@@ -24,7 +24,6 @@ public class User extends BaseModel {
     @Enumerated(EnumType.STRING)
     private UserResponseStatus status;
     private boolean verified;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",

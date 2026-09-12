@@ -2,7 +2,7 @@ package com.venkat.bookmyshowapplication.auth.Security;
 
 
 import com.venkat.bookmyshowapplication.Common.Exceptions.InvalidRefreshTokenException;
-import com.venkat.bookmyshowapplication.User.Model.User;
+import com.venkat.bookmyshowapplication.User.Dto.TokenGenerateDto;
 import com.venkat.bookmyshowapplication.auth.model.RefreshToken;
 import com.venkat.bookmyshowapplication.auth.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,16 +39,26 @@ public class RefreshTokenService {
         this.clock = Clock.systemUTC();
     }
 
-    public String generateAndStore(User user) {
+    public String generateAndStore(TokenGenerateDto tokenGenerateDto) {
         String rawToken = generateSecureToken();
         String tokenHash = hash(rawToken);
 
         Instant createdAt = clock.instant();
-        Instant expiresAt = createdAt.plus(refreshTokenExpiration);
+        Instant expiresAt;
+
+        if (tokenGenerateDto.getSubsequent().equals(Boolean.FALSE)){
+             expiresAt = createdAt.plus(refreshTokenExpiration);
+        }else {
+            RefreshToken refreshToken1 =  refreshTokenRepository.findById(tokenGenerateDto.getUser().getId()).
+                    orElseThrow(()-> new InvalidRefreshTokenException("User not found"));
+
+             expiresAt = refreshToken1.getExpiresAt();
+        }
+
 
         RefreshToken refreshToken = new RefreshToken(
                 tokenHash,
-                user,
+                tokenGenerateDto.getUser(),
                 createdAt,
                 expiresAt
         );
