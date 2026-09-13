@@ -3,9 +3,9 @@ package com.venkat.bookmyshowapplication.User.Security;
 import com.venkat.bookmyshowapplication.User.Repository.UserRepository;
 import com.venkat.bookmyshowapplication.auth.Security.JwtAuthenticationFilter;
 import com.venkat.bookmyshowapplication.auth.Security.JwtService;
+import com.venkat.bookmyshowapplication.auth.Security.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,7 +32,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter
+            JwtAuthenticationFilter jwtAuthenticationFilter, OAuth2AuthenticationSuccessHandler oauth2SuccessHandler
     ) throws Exception {
 
         http
@@ -72,7 +72,9 @@ public class SecurityConfig {
                 )
 
                 // Google OAuth2 Login
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth ->
+                oauth.successHandler(oauth2SuccessHandler)
+        )
 
                 // Existing JWT filter
                 .addFilterBefore(
