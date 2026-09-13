@@ -11,10 +11,9 @@ import lombok.Setter;
 public class UserAuthProvider extends  BaseModel {
 @ManyToOne
 @JoinColumn(name = "user_id")
-@Column(unique = true)
     private User user;
 @Enumerated(EnumType.STRING)
 @Column(unique = true)
-    private Authprovider authprovider;
-    private  String provideruserid;
+    private Authprovider provider;
+    private  String providerUserId;
 }

@@ -35,6 +35,6 @@ public class User extends BaseModel {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserAuthProvider> provider = new ArrayList<>();
+    private List<UserAuthProvider> providerUserId = new ArrayList<>();
 
 }
