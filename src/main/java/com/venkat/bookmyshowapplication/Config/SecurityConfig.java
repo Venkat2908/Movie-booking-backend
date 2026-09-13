@@ -5,6 +5,7 @@ import com.venkat.bookmyshowapplication.auth.Security.JwtAuthenticationFilter;
 import com.venkat.bookmyshowapplication.auth.Security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,7 +44,12 @@ public class SecurityConfig {
                 ) .addFilterBefore(
                         jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
-        );
+
+        ).formLogin(Customizer.withDefaults())
+                .oauth2AuthorizationServer((authorizationServer) ->
+                        authorizationServer
+                                .oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
+                );
         return http.build();
     }
 }
