@@ -3,7 +3,6 @@ package com.venkat.bookmyshowapplication.User.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +19,6 @@ public class User extends BaseModel {
     @Email
     @Column(nullable = false,unique = true)
     private String email;
-    @NotBlank(message = "Password cannot be empty")
-    @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
     private UserResponseStatus status;

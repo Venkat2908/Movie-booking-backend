@@ -13,7 +13,6 @@ public class UserAuthProvider extends  BaseModel {
 @JoinColumn(name = "user_id")
     private User user;
 @Enumerated(EnumType.STRING)
-@Column(unique = true)
     private Authprovider provider;
     private  String providerUserId;
 }
